@@ -9,8 +9,6 @@ app.use(express.static("."));
 const uploadDir = "./uploads";
 
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
-
-// Store uploaded files
 const storage = multer.diskStorage({
   destination: uploadDir,
   filename: (req, file, cb) => {
@@ -22,15 +20,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Upload endpoint
 app.post("/upload", upload.single("file"), (req, res) => {
   const file = req.file;
 
-  const url = `${req.protocol}://${req.get("host")}/download/${file.filename}`;
+  const url = `${req.protocol}://${req.get("host")}/download/${encodeURIComponent(file.filename)}`;
   res.json({ url });
 });
 
-// File download endpoint
 app.get("/download/:name", (req, res) => {
   const filePath = path.join(uploadDir, req.params.name);
   if (fs.existsSync(filePath)) {
@@ -39,7 +35,6 @@ app.get("/download/:name", (req, res) => {
   return res.status(404).send("File expired or not found.");
 });
 
-// Auto-delete files older than 4 hours
 setInterval(() => {
   const files = fs.readdirSync(uploadDir);
   const now = Date.now();
@@ -54,6 +49,6 @@ setInterval(() => {
       console.log("Deleted expired file:", file);
     }
   });
-}, 60 * 60 * 1000); // runs every 1 hour
+}, 60 * 60 * 1000);
 
 app.listen(3000, () => console.log("Server running on port 3000"));

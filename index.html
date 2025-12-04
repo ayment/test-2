@@ -9,6 +9,19 @@
     <h1>Anon File Uploader</h1>
     <input type="file" id="fileInput">
     <button id="uploadBtn">Upload</button>
+    <div id="progressContainer" style="display:none; margin-top:15px;">
+  <div id="progressBar"
+       style="
+         width:0%;
+         height:10px;
+         background:#4a4aff;
+         border-radius:5px;
+         transition:width .2s;
+       ">
+  </div>
+  <p id="progressText" style="margin-top:8px; font-size:14px; opacity:0.8;">0%</p>
+</div>
+
     <div id="result"></div>
   </div>
 <script src="script.js"></script>
